@@ -1,5 +1,6 @@
 class Player {
     constructor(params) {
+        this.uid = this.generateUUID();
         this.playerWidth = 60;
         this.playerHeight = 60;
         this.playerX = 10;
@@ -9,6 +10,18 @@ class Player {
         this.canvas = params.canvas;
         this.speed = 10;
         this.mouseDown = false;
+    }
+
+    getDataForServer() {
+        return {
+            uid: this.uid,
+            pW: this.playerWidth,
+            pH: this.playerHeight,
+            pX: this.playerX,
+            pY: this.playerY,
+            dir: this.direction,
+            bull: this.bull
+        }
     }
 
     move() {
@@ -39,10 +52,7 @@ class Player {
                     clearInterval(shoting);
                 }
                 var bullet = new Bullet(this.generateShot());
-                console.log(bullet);
-               
-                bullet.draw(this.ctx);
-                bullets.push(bullet);
+                Network.nb(bullet);
             }, 100);
         }
     }
@@ -69,19 +79,30 @@ class Player {
         return params;
     }
 
-    draw() {
-        this.ctx.save();
+    generateUUID() {
+        var d = new Date().getTime();
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+        return uuid;
+    };
+
+    static draw(player,ctx) {
+       // console.log(player);
+        ctx.save();
         //  console.log(this.direction);
         //Tank Body
-        this.ctx.fillStyle = 'green';
-        this.ctx.translate(this.playerX + this.playerWidth / 2, this.playerY + this.playerHeight / 2);
-        this.ctx.rotate(this.direction);
-        this.ctx.translate(-(this.playerX + this.playerWidth / 2), -(this.playerY + this.playerHeight / 2));
-        this.ctx.fillRect(this.playerX, this.playerY, this.playerWidth, this.playerHeight);
+        ctx.fillStyle = 'green';
+        ctx.translate(player.playerX + player.playerWidth / 2, player.playerY + player.playerHeight / 2);
+        ctx.rotate(player.direction);
+        ctx.translate(-(player.playerX + player.playerWidth  / 2), -(player.playerY + player.playerHeight / 2));
+        ctx.fillRect(player.playerX, player.playerY, player.playerWidth, player.playerHeight);
 
         //Canon
-        this.ctx.fillStyle = 'red';
-        this.ctx.fillRect(this.playerX + 30, this.playerY + 22, 60, 15);
-        this.ctx.restore();
+        ctx.fillStyle = 'red';
+        ctx.fillRect(player.playerX + 30, player.playerY + 22, 60, 15);
+        ctx.restore();
     }
 }

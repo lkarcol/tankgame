@@ -2,7 +2,7 @@ var express = require('express');
 var path = require('path');
 //var bodyParser = require('body-parser')
 var app = express();
-
+var HashMap = require('hashmap');
 
 // parse application/x-www-form-urlencoded 
 //app.use(bodyParser.urlencoded({ extended: false }));
@@ -26,15 +26,28 @@ var port = process.env.PORT || 3000;
 
 
 var server = require('http').createServer(app).listen(port, function () {
-	console.log("Server ide!!!" + port)
+	console.log("Server running!!!" + port)
 });
 
 // Create socket
 var io = require('socket.io')(server);
 
-
+var players = new HashMap();
+var uid;
+var allBullets = [];
 io.on('connection', socket => {
-	console.log("OK");
+	socket.on('playerData', (data) => {
+		players.set(data.uid, data);
+		io.emit('updatePlayer', players);
+	});
+
+	socket.on('nb',b =>{
+		io.emit('nb',b);
+	});
+
+	
+
 });
+
 
 

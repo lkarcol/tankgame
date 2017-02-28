@@ -7,10 +7,10 @@ class Bullet {
         this.speed = 10;
     }
 
-    draw(ctx) {
-        this.x += this.dX;
-        this.y += this.dY;
+    static draw(ctx,bullet) {
+        bullet.x += bullet.dX;
+        bullet.y += bullet.dY;
         ctx.fillStyle = 'black';
-        ctx.fillRect(this.x, this.y, 5, 5);
+        ctx.fillRect(bullet.x, bullet.y, 5, 5);
     }
 } 
