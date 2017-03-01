@@ -38,6 +38,10 @@ var allBullets = [];
 io.on('connection', socket => {
 	socket.on('playerData', (data) => {
 		players.set(data.uid, data);
+		if(data.health < 0 ){
+			players.remove(data.uid);
+		}
+		console.log(players.count());
 		io.emit('updatePlayer', players);
 	});
 

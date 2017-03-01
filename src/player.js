@@ -6,6 +6,7 @@ class Player {
         this.playerX = 10;
         this.playerY = 10;
         this.direction = 0;
+        this.health = 60;
         this.ctx = params.ctx;
         this.canvas = params.canvas;
         this.speed = 10;
@@ -44,16 +45,17 @@ class Player {
     }
 
     shot(bullets) {
-
-        this.mouseDown = true;
-        if (this.mouseDown == true) {
-            let shoting = setInterval(() => {
-                if (this.mouseDown == false) {
-                    clearInterval(shoting);
-                }
-                var bullet = new Bullet(this.generateShot());
-                Network.bulletToServer(bullet);
-            }, 100);
+        if (this.health > 0) {
+            this.mouseDown = true;
+            if (this.mouseDown == true) {
+                let shoting = setInterval(() => {
+                    if (this.mouseDown == false) {
+                        clearInterval(shoting);
+                    }
+                    var bullet = new Bullet(this.generateShot());
+                    Network.bulletToServer(bullet);
+                }, 100);
+            }
         }
     }
 
@@ -66,8 +68,8 @@ class Player {
         let x = ((this.playerX + (this.playerWidth / 2)) + Math.cos(this.direction) * 70);
         let y = ((this.playerY + (this.playerHeight / 2)) + Math.sin(this.direction) * 70);
         //Direct + speed
-        let dx =  Math.cos(this.direction);
-        let dy =  Math.sin(this.direction);
+        let dx = Math.cos(this.direction);
+        let dy = Math.sin(this.direction);
 
         let params = {
             x: x,
@@ -89,20 +91,24 @@ class Player {
         return uuid;
     };
 
-    static draw(player,ctx) {
-       // console.log(player);
+    static draw(player, ctx) {
         ctx.save();
-        //  console.log(this.direction);
         //Tank Body
         ctx.fillStyle = 'green';
         ctx.translate(player.playerX + player.playerWidth / 2, player.playerY + player.playerHeight / 2);
         ctx.rotate(player.direction);
-        ctx.translate(-(player.playerX + player.playerWidth  / 2), -(player.playerY + player.playerHeight / 2));
+        ctx.translate(-(player.playerX + player.playerWidth / 2), -(player.playerY + player.playerHeight / 2));
         ctx.fillRect(player.playerX, player.playerY, player.playerWidth, player.playerHeight);
 
         //Canon
         ctx.fillStyle = 'red';
         ctx.fillRect(player.playerX + 30, player.playerY + 22, 60, 15);
+
+
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(player.playerX, player.playerY - 5, player.health, 5);
+        //Health bar
+
         ctx.restore();
     }
 }

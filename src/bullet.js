@@ -4,7 +4,8 @@ class Bullet {
         this.y = params.y;
         this.dX = params.dx;
         this.dY = params.dy;
-        this.speed = 10;
+        this.speed = 5;
+        this.collision = false;
     }
 
     static draw(ctx,bullet) {
