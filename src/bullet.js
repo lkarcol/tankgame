@@ -8,8 +8,8 @@ class Bullet {
     }
 
     static draw(ctx,bullet) {
-        bullet.x += bullet.dX;
-        bullet.y += bullet.dY;
+        bullet.x += bullet.speed * bullet.dX;
+        bullet.y += bullet.speed * bullet.dY;
         ctx.fillStyle = 'black';
         ctx.fillRect(bullet.x, bullet.y, 5, 5);
     }

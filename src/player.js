@@ -52,7 +52,7 @@ class Player {
                     clearInterval(shoting);
                 }
                 var bullet = new Bullet(this.generateShot());
-                Network.nb(bullet);
+                Network.bulletToServer(bullet);
             }, 100);
         }
     }
@@ -66,8 +66,8 @@ class Player {
         let x = ((this.playerX + (this.playerWidth / 2)) + Math.cos(this.direction) * 70);
         let y = ((this.playerY + (this.playerHeight / 2)) + Math.sin(this.direction) * 70);
         //Direct + speed
-        let dx = 10 * Math.cos(this.direction);
-        let dy = 10 * Math.sin(this.direction);
+        let dx =  Math.cos(this.direction);
+        let dy =  Math.sin(this.direction);
 
         let params = {
             x: x,

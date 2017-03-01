@@ -41,8 +41,8 @@ io.on('connection', socket => {
 		io.emit('updatePlayer', players);
 	});
 
-	socket.on('nb',b =>{
-		io.emit('nb',b);
+	socket.on('sendBllet',b =>{
+		io.emit('bulletToClient',b);
 	});
 
 	

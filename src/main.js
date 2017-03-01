@@ -9,7 +9,7 @@ class Game {
         this.objects = {
             myPlayer: null,
             players: [],
-            bullets:[]
+            bullets: []
         }
 
         Network.connectToServer(this);
@@ -30,9 +30,9 @@ class Game {
         document.addEventListener('mousemove', () => player.rotate());
 
         document.addEventListener('mousedown', () => {
-             player.shot();
-             console.log(this.objects.myPlayer);
-             console.log(this.objects.players);
+            player.shot();
+            console.log(this.objects.myPlayer);
+            console.log(this.objects.players);
         });
 
         document.addEventListener('mouseup', () => player.stopShot());
@@ -42,9 +42,9 @@ class Game {
 
     draw() {
         this.ctx.clearRect(0, 0, this.width, this.height);
-        //   console.log( this.objects.bullets);
         this.playerDraw();
         this.bulletsDraw();
+        this.testBulletTankCollision();
         Network.sendDataToServer(this.objects.myPlayer);
         requestAnimationFrame(() => this.draw());
     }
@@ -61,7 +61,6 @@ class Game {
             if (bullet.x >= this.width || bullet.y >= this.height) {
                 this.objects.bullets.slice(i, 1);
             }
-
         });
     }
 
@@ -73,8 +72,21 @@ class Game {
         }
     }
 
-    nb(d){
-        this.objects.bullets.push(d);
+    updateBullets(bull) {
+        this.objects.bullets.push(bull);
+    }
+
+    testBulletTankCollision() {
+        var playerMaxX = this.objects.myPlayer.playerX + this.objects.myPlayer.playerWidth;
+        var playerMaxY = this.objects.myPlayer.playerY + this.objects.myPlayer.playerHeight;
+
+        this.objects.bullets.map((bullet) => {
+            if ((bullet.x >= this.objects.myPlayer.playerX && bullet.x <= playerMaxX) &&
+                (bullet.y >= this.objects.myPlayer.playerY && bullet.y <= playerMaxY)
+            ){
+               
+            }
+        });
     }
 
 }
