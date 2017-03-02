@@ -34,7 +34,7 @@ var io = require('socket.io')(server);
 
 var players = new HashMap();
 var uid;
-var allBullets = [];
+
 io.on('connection', socket => {
 	socket.on('playerData', (data) => {
 		players.set(data.uid, data);

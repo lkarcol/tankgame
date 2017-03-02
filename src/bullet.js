@@ -4,7 +4,7 @@ class Bullet {
         this.y = params.y;
         this.dX = params.dx;
         this.dY = params.dy;
-        this.speed = 5;
+        this.speed = 10;
         this.collision = false;
     }
 

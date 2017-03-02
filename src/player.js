@@ -3,13 +3,14 @@ class Player {
         this.uid = this.generateUUID();
         this.playerWidth = 60;
         this.playerHeight = 60;
-        this.playerX = 10;
-        this.playerY = 10;
+        this.playerX = 100;
+        this.playerY = 100;
         this.direction = 0;
         this.health = 60;
         this.ctx = params.ctx;
         this.canvas = params.canvas;
         this.speed = 10;
+        this.isMoving = true;
         this.mouseDown = false;
     }
 
@@ -26,11 +27,13 @@ class Player {
     }
 
     move() {
+
         let key = event.key;
         if (key == 'w') {
-            this.playerX += this.speed * Math.cos(this.direction);
-            this.playerY += this.speed * Math.sin(this.direction);
+                this.playerX += this.speed * Math.cos(this.direction);
+                this.playerY += this.speed * Math.sin(this.direction);
         }
+
     }
 
     rotate() {
@@ -93,6 +96,7 @@ class Player {
 
     static draw(player, ctx) {
         ctx.save();
+
         //Tank Body
         ctx.fillStyle = 'green';
         ctx.translate(player.playerX + player.playerWidth / 2, player.playerY + player.playerHeight / 2);
@@ -104,10 +108,9 @@ class Player {
         ctx.fillStyle = 'red';
         ctx.fillRect(player.playerX + 30, player.playerY + 22, 60, 15);
 
-
+        //Health bar
         ctx.fillStyle = 'blue';
         ctx.fillRect(player.playerX, player.playerY - 5, player.health, 5);
-        //Health bar
 
         ctx.restore();
     }

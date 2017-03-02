@@ -3,8 +3,9 @@ class Game {
 
         this.canvas = document.getElementById("canvas");
         this.ctx = this.canvas.getContext('2d');
-        this.canvas.width = this.width = 800;
-        this.canvas.height = this.height = 800;
+
+        this.canvas.width = this.width = window.innerWidth;
+        this.canvas.height = this.height = window.innerHeight;
 
         this.objects = {
             myPlayer: null,
@@ -43,10 +44,26 @@ class Game {
         requestAnimationFrame(() => this.draw());
     }
 
+    positionTest() {
+        let dir = this.objects.myPlayer.direction;
+        let px = (Math.cos(dir) * 10 + this.objects.myPlayer.playerX);
+        let py = (Math.sin(dir) * 10 + this.objects.myPlayer.playerY);
+        let player = this.objects.myPlayer;
+       // console.log(px);
+        console.log(py);
+        if ((px >= 10 && px <= this.width-30) && (py >= 10 && py  <= this.height-30)) {
+            player.speed = 10;
+            return;
+        }
+            player.speed = 0;
+    }
+
+
     playerDraw() {
         this.objects.players.forEach(player => {
             Player.draw(player, this.ctx);
         });
+        this.positionTest();
     }
 
     bulletsDraw() {
@@ -77,13 +94,14 @@ class Game {
 
         this.objects.bullets.forEach((bullet, i) => {
             this.objects.players.forEach((player, i) => {
+
                 var playerMaxX = player.playerX + player.playerWidth;
                 var playerMaxY = player.playerY + player.playerHeight;
 
                 if ((bullet.x >= player.playerX && bullet.x <= playerMaxX) &&
                     (bullet.y >= player.playerY && bullet.y <= playerMaxY)
                 ) {
-                    if(player.uid == this.objects.myPlayer.uid){
+                    if (player.uid == this.objects.myPlayer.uid) {
                         this.objects.myPlayer.health -= 1;
                     }
                     bullet.collision = true;
