@@ -41,12 +41,15 @@ io.on('connection', socket => {
 		if(data.health < 0 ){
 			players.remove(data.uid);
 		}
-		console.log(players.count());
 		io.emit('updatePlayer', players);
 	});
 
 	socket.on('sendBllet',b =>{
 		io.emit('bulletToClient',b);
+	});
+
+	socket.on('pingCheck', () => {
+		socket.emit('ping');
 	});
 
 	

@@ -4,6 +4,8 @@ class Game {
         this.canvas = document.getElementById("canvas");
         this.ctx = this.canvas.getContext('2d');
 
+                this.ping = document.getElementById("ping");
+
         this.canvas.width = this.width = window.innerWidth;
         this.canvas.height = this.height = window.innerHeight;
 
@@ -12,6 +14,8 @@ class Game {
             players: [],
             bullets: []
         }
+
+        this.pingTime = 0;
 
         this.params = {
             canvas: this.canvas,
@@ -39,6 +43,7 @@ class Game {
         this.playerDraw();
         this.bulletsDraw();
         this.testBulletTankCollision();
+        this.pingTime = Date.now();
         Network.sendDataToServer(this.objects.myPlayer);
         //   console.log(this.objects.bullets);
         requestAnimationFrame(() => this.draw());
@@ -50,7 +55,7 @@ class Game {
         let py = (Math.sin(dir) * 10 + this.objects.myPlayer.playerY);
         let player = this.objects.myPlayer;
        // console.log(px);
-        console.log(py);
+        //console.log(py);
         if ((px >= 10 && px <= this.width-30) && (py >= 10 && py  <= this.height-30)) {
             player.speed = 10;
             return;
@@ -72,7 +77,7 @@ class Game {
             if ((bullet.x >= this.width) || (bullet.y >= this.height) ||
                 (bullet.x < 0) || (bullet.y < 0) || (bullet.collision == true)
             ) {
-                console.log(bullet);
+           //     console.log(bullet);
                 this.objects.bullets.splice(i, 1);
             }
         });
@@ -109,6 +114,11 @@ class Game {
             });
         });
     }
+
+    pingCheck(){
+        let ping = Date.now() - this.pingTime;
+        this.ping.innerHTML = ping;
+    } 
 
 
 }
