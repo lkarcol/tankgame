@@ -50,14 +50,15 @@ io.on('connection', socket => {
 	});
 
 	ticks = setInterval(() => {
+		io.emit('bulletToClient', bull);
+		io.emit('updatePlayer', players);
+		
 		bull.forEach((bullet, i) => {
 			players.forEach((player, key) => {
 				outsideRoom(bullet, i);
 				collision(bullet, player, i);
 			});
 		});
-		io.emit('bulletToClient', bull);
-		io.emit('updatePlayer', players);
 	}, 1000 / 33);
 
 
