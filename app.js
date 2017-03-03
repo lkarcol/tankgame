@@ -34,27 +34,58 @@ var io = require('socket.io')(server);
 
 var players = new HashMap();
 var uid;
+var bull = [];
+var ticks;
 
 io.on('connection', socket => {
 	socket.on('playerData', (data) => {
 		players.set(data.uid, data);
-		if(data.health < 0 ){
+		if (data.health < 0) {
 			players.remove(data.uid);
 		}
-		io.emit('updatePlayer', players);
 	});
 
-	socket.on('sendBllet',b =>{
-		io.emit('bulletToClient',b);
+	socket.on('sendBllet', b => {
+		bull.push(b);
 	});
+
+	ticks = setInterval(() => {
+		bull.forEach((bullet, i) => {
+			players.forEach((player, key) => {
+				outsideRoom(bullet, i);
+				collision(bullet, player, i);
+			});
+		});
+		io.emit('bulletToClient', bull);
+		io.emit('updatePlayer', players);
+	}, 1000 / 33);
+
 
 	socket.on('pingCheck', () => {
 		socket.emit('ping');
 	});
-
-	
-
 });
 
+function collision(bullet, player, i) {
+	var playerMaxX = player.playerX + player.playerWidth;
+	var playerMaxY = player.playerY + player.playerHeight;
 
+	if ((bullet.x >= player.playerX && bullet.x <= playerMaxX) &&
+		(bullet.y >= player.playerY && bullet.y <= playerMaxY)
+	) {
+		player.health -= 1;
+		bull.splice(i, 1);
+	} else {
+		bullet.x += bullet.speed * bullet.dX;
+		bullet.y += bullet.speed * bullet.dY;
+	}
+}
 
+//If bullet is outside room destroy
+function outsideRoom(bullet, i) {
+	if ((bullet.x >= 1000) || (bullet.y >= 1000) ||
+		(bullet.x < 0) || (bullet.y < 0)
+	) {
+		bull.splice(i, 1);
+	}
+}

@@ -15,7 +15,7 @@ class Network {
         this.socket.on('ping', () => game.pingCheck());
     }
 
-    static sendDataToServer(myPlayer,pt) {
+    static sendDataToServer(myPlayer) {
         this.socket.emit('playerData', myPlayer);
         this.socket.emit('pingCheck');
     }

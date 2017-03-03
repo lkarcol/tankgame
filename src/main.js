@@ -4,10 +4,10 @@ class Game {
         this.canvas = document.getElementById("canvas");
         this.ctx = this.canvas.getContext('2d');
 
-                this.ping = document.getElementById("ping");
+        this.ping = document.getElementById("ping");
 
-        this.canvas.width = this.width = window.innerWidth;
-        this.canvas.height = this.height = window.innerHeight;
+        this.canvas.width = this.width = 1000;
+        this.canvas.height = this.height = 1000;
 
         this.objects = {
             myPlayer: null,
@@ -42,7 +42,7 @@ class Game {
         this.ctx.clearRect(0, 0, this.width, this.height);
         this.playerDraw();
         this.bulletsDraw();
-        this.testBulletTankCollision();
+        // this.testBulletTankCollision();
         this.pingTime = Date.now();
         Network.sendDataToServer(this.objects.myPlayer);
         //   console.log(this.objects.bullets);
@@ -54,13 +54,13 @@ class Game {
         let px = (Math.cos(dir) * 10 + this.objects.myPlayer.playerX);
         let py = (Math.sin(dir) * 10 + this.objects.myPlayer.playerY);
         let player = this.objects.myPlayer;
-       // console.log(px);
+        // console.log(px);
         //console.log(py);
-        if ((px >= 10 && px <= this.width-30) && (py >= 10 && py  <= this.height-30)) {
+        if ((px >= 10 && px <= this.width - 30) && (py >= 10 && py <= this.height - 30)) {
             player.speed = 10;
             return;
         }
-            player.speed = 0;
+        player.speed = 0;
     }
 
 
@@ -74,12 +74,6 @@ class Game {
     bulletsDraw() {
         this.objects.bullets.forEach((bullet, i) => {
             Bullet.draw(this.ctx, bullet);
-            if ((bullet.x >= this.width) || (bullet.y >= this.height) ||
-                (bullet.x < 0) || (bullet.y < 0) || (bullet.collision == true)
-            ) {
-           //     console.log(bullet);
-                this.objects.bullets.splice(i, 1);
-            }
         });
     }
 
@@ -87,38 +81,41 @@ class Game {
         var uid = this.objects.myPlayer.uid;
         this.objects.players = [];
         for (let i in data._data) {
+            if (uid == data._data[i][1].uid) {
+                this.objects.myPlayer.health = data._data[i][1].health;
+            }
             this.objects.players.push(data._data[i][1]);
         }
     }
 
     updateBullets(bull) {
-        this.objects.bullets.push(bull);
+        this.objects.bullets = bull;
     }
 
-    testBulletTankCollision() {
+    /*  testBulletTankCollision() {
+  
+          this.objects.bullets.forEach((bullet, i) => {
+              this.objects.players.forEach((player, i) => {
+  
+                  var playerMaxX = player.playerX + player.playerWidth;
+                  var playerMaxY = player.playerY + player.playerHeight;
+  
+                  if ((bullet.x >= player.playerX && bullet.x <= playerMaxX) &&
+                      (bullet.y >= player.playerY && bullet.y <= playerMaxY)
+                  ) {
+                      if (player.uid == this.objects.myPlayer.uid) {
+                          this.objects.myPlayer.health -= 1;
+                      }
+                      bullet.collision = true;
+                  }
+              });
+          });
+      }*/
 
-        this.objects.bullets.forEach((bullet, i) => {
-            this.objects.players.forEach((player, i) => {
-
-                var playerMaxX = player.playerX + player.playerWidth;
-                var playerMaxY = player.playerY + player.playerHeight;
-
-                if ((bullet.x >= player.playerX && bullet.x <= playerMaxX) &&
-                    (bullet.y >= player.playerY && bullet.y <= playerMaxY)
-                ) {
-                    if (player.uid == this.objects.myPlayer.uid) {
-                        this.objects.myPlayer.health -= 1;
-                    }
-                    bullet.collision = true;
-                }
-            });
-        });
-    }
-
-    pingCheck(){
+    pingCheck() {
         let ping = Date.now() - this.pingTime;
         this.ping.innerHTML = ping;
-    } 
+    }
 
 
 }

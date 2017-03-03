@@ -57,7 +57,7 @@ class Player {
                     }
                     var bullet = new Bullet(this.generateShot());
                     Network.bulletToServer(bullet);
-                }, 100);
+                }, 110);
             }
         }
     }
