@@ -20,7 +20,7 @@ Give examples
 First step
 
 ```
-git clone https://github.com/mnichovcan/tankgame.git
+git clone https://github.com/lkarcol/tankgame.git
 ```
 
 Next
